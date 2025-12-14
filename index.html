@@ -39,6 +39,84 @@
           const [newCategory, setNewCategory] = useState('');
           const [isConverting, setIsConverting] = useState(false);
 
+          // Pre-loaded categories
+          const defaultCategories = [
+            'מבוא לפסיכולוגיה חיובית',
+            'שינוי',
+            'הרשות להיות אנושי',
+            'רגשות חיובייים',
+            'אמונות',
+            'מערכות יחסים',
+            'פוקוס והכרת תודה',
+            'מטרות',
+            'חוזקות',
+            'גוף ונפש',
+            'קשיבות / מיינדפולנס',
+            'מתח וזרימה',
+            'פרפקציוניזם וקבלה עצמית',
+            'משמעות',
+            'הקשבה',
+            'חשיבה מתפתחת Growth Mindset',
+            'קבלה עצמית',
+            'אותנטיות',
+            'יוזמת / סיכום',
+            'התקשרות',
+            'להקת הזאבות'
+          ];
+
+          // Pre-loaded songs
+          const defaultSongs = [
+            { "id": 1000001, "title": "אבן על אבן", "artist": "עידן רייכל", "category": "מבוא לפסיכולוגיה חיובית", "url": "https://www.youtube.com/embed/NIi29Qeqlis", "type": "video", "originalUrl": "https://youtu.be/NIi29Qeqlis" },
+            { "id": 1000002, "title": "יש לך אותך", "artist": "מירי מסיקה ומיקה משה", "category": "מבוא לפסיכולוגיה חיובית", "url": "https://www.youtube.com/embed/UzlVFA9eu7Y", "type": "video", "originalUrl": "https://youtu.be/UzlVFA9eu7Y" },
+            { "id": 1000003, "title": "לפני שייגמר", "artist": "עידן רייכל", "category": "מבוא לפסיכולוגיה חיובית", "url": "https://www.youtube.com/embed/_Rlf9AiALS4", "type": "video", "originalUrl": "https://youtu.be/_Rlf9AiALS4" },
+            { "id": 1000004, "title": "מחכה", "artist": "ריטה", "category": "שינוי", "url": "https://www.youtube.com/embed/hAX2ku9ifEs", "type": "video", "originalUrl": "https://youtu.be/hAX2ku9ifEs" },
+            { "id": 1000005, "title": "רק מילה טובה", "artist": "יהודית רביץ", "category": "שינוי", "url": "https://www.youtube.com/embed/KrT1Gq_gVV0", "type": "video", "originalUrl": "https://youtu.be/KrT1Gq_gVV0" },
+            { "id": 1000006, "title": "אושר בא והולך", "artist": "קרן פלס", "category": "הרשות להיות אנושי", "url": "https://www.youtube.com/embed/oxncYgmwAhg", "type": "video", "originalUrl": "https://youtu.be/oxncYgmwAhg" },
+            { "id": 1000007, "title": "לו יהיה Let It Be", "artist": "יובל דיין ורן דנקנר", "category": "הרשות להיות אנושי", "url": "https://www.youtube.com/embed/LA8scxFm1ak", "type": "video", "originalUrl": "https://youtu.be/LA8scxFm1ak" },
+            { "id": 1000008, "title": "בוא", "artist": "עברי לידר", "category": "הרשות להיות אנושי", "url": "https://www.youtube.com/embed/RON_yOeRxVk", "type": "video", "originalUrl": "https://youtu.be/RON_yOeRxVk" },
+            { "id": 1000009, "title": "אור גדול", "artist": "אמיר דדון", "category": "רגשות חיובייים", "url": "https://www.youtube.com/embed/lO9Z7znMKl0", "type": "video", "originalUrl": "https://youtu.be/lO9Z7znMKl0" },
+            { "id": 1000010, "title": "כל מה שתרצה", "artist": "שלמה ויונתן ארצי", "category": "אמונות", "url": "https://www.youtube.com/embed/VlIQa3yQbjU", "type": "video", "originalUrl": "https://youtu.be/VlIQa3yQbjU" },
+            { "id": 1000011, "title": "שיר תקווה", "artist": "שי המבר", "category": "אמונות", "url": "https://www.youtube.com/embed/QB0MzwX6pcI", "type": "video", "originalUrl": "https://youtu.be/QB0MzwX6pcI" },
+            { "id": 1000012, "title": "קוצים", "artist": "אביב גפן ועידן רייכל", "category": "אמונות", "url": "https://www.youtube.com/embed/ugbiJ0gDjpA", "type": "video", "originalUrl": "https://youtu.be/ugbiJ0gDjpA" },
+            { "id": 1000013, "title": "זה מתחיל בצעד", "artist": "עדי אברהמי", "category": "אמונות", "url": "https://www.youtube.com/embed/V-tLNtHResI", "type": "video", "originalUrl": "https://youtu.be/V-tLNtHResI" },
+            { "id": 1000014, "title": "דרכינו", "artist": "שרית וינו אלעד וחני פירסטנברג", "category": "שינוי", "url": "https://www.youtube.com/embed/3QRn29PKuo8", "type": "video", "originalUrl": "https://youtu.be/3QRn29PKuo8" },
+            { "id": 1000015, "title": "אהבה ממבט ראשון", "artist": "אריק איינשטיין", "category": "מערכות יחסים", "url": "https://www.youtube.com/embed/e6YRMd6-q78", "type": "video", "originalUrl": "https://youtu.be/e6YRMd6-q78" },
+            { "id": 1000016, "title": "תודה", "artist": "קרן פלס ורמי קליינשטיין", "category": "פוקוס והכרת תודה", "url": "https://www.youtube.com/embed/0zWUPibqQd8", "type": "video", "originalUrl": "https://youtu.be/0zWUPibqQd8" },
+            { "id": 1000017, "title": "תגיד תודה שיש לך עיניים", "artist": "סי היימן", "category": "פוקוס והכרת תודה", "url": "https://www.youtube.com/embed/ZDkUGDgA2Fk", "type": "video", "originalUrl": "https://youtu.be/ZDkUGDgA2Fk" },
+            { "id": 1000018, "title": "מודה אני", "artist": "עומר אדם", "category": "פוקוס והכרת תודה", "url": "https://www.youtube.com/embed/YQ5f1OMFFL0", "type": "video", "originalUrl": "https://youtu.be/YQ5f1OMFFL0" },
+            { "id": 1000019, "title": "מכתב לאחי", "artist": "קובי אפללו", "category": "מטרות", "url": "https://www.youtube.com/embed/FVMZ5kgBKPY", "type": "video", "originalUrl": "https://youtu.be/FVMZ5kgBKPY" },
+            { "id": 1000020, "title": "לחיות", "artist": "קרן פלס ורמי קליינשטיין", "category": "מטרות", "url": "https://www.youtube.com/embed/bXjJPe-XgVA", "type": "video", "originalUrl": "https://youtu.be/bXjJPe-XgVA" },
+            { "id": 1000021, "title": "חזקה מהרוח", "artist": "גלי עטרי", "category": "חוזקות", "url": "https://www.youtube.com/embed/XEQIK3GMZok", "type": "video", "originalUrl": "https://youtu.be/XEQIK3GMZok" },
+            { "id": 1000022, "title": "אלוף העולם", "artist": "חנן בן ארי", "category": "חוזקות", "url": "https://www.youtube.com/embed/jlCNqyY-fAk", "type": "video", "originalUrl": "https://youtu.be/jlCNqyY-fAk" },
+            { "id": 1000023, "title": "רציתי לשיר", "artist": "רוני דלומי", "category": "חוזקות", "url": "https://www.youtube.com/embed/BGdQZlNR9bY", "type": "video", "originalUrl": "https://youtu.be/BGdQZlNR9bY" },
+            { "id": 1000024, "title": "כל שעה נשיקה", "artist": "חוה אלברשטיין", "category": "גוף ונפש", "url": "https://www.youtube.com/embed/smxxi4PbOnc", "type": "video", "originalUrl": "https://youtu.be/smxxi4PbOnc" },
+            { "id": 1000025, "title": "סע", "artist": "הדג נחש", "category": "גוף ונפש", "url": "https://www.youtube.com/embed/Syjb99ed5xg", "type": "video", "originalUrl": "https://youtu.be/Syjb99ed5xg" },
+            { "id": 1000026, "title": "עניין של זמן", "artist": "גידי גוב", "category": "קשיבות / מיינדפולנס", "url": "https://www.youtube.com/embed/YRL0DWoDhCM", "type": "video", "originalUrl": "https://youtu.be/YRL0DWoDhCM" },
+            { "id": 1000027, "title": "כל העולם", "artist": "רונית שחר", "category": "קשיבות / מיינדפולנס", "url": "https://www.youtube.com/embed/vwQFMsjFSvI", "type": "video", "originalUrl": "https://youtu.be/vwQFMsjFSvI" },
+            { "id": 1000028, "title": "תתארו לכם", "artist": "שלמה ארצי", "category": "מתח וזרימה", "url": "https://www.youtube.com/embed/Y0KxZz5k-RE", "type": "video", "originalUrl": "https://youtu.be/Y0KxZz5k-RE" },
+            { "id": 1000029, "title": "נגד הרוח", "artist": "אמיר דדון", "category": "פרפקציוניזם וקבלה עצמית", "url": "https://www.youtube.com/embed/zP26VkIL81c", "type": "video", "originalUrl": "https://youtu.be/zP26VkIL81c" },
+            { "id": 1000030, "title": "משנה לשנה", "artist": "יהודית רביץ", "category": "מבוא לפסיכולוגיה חיובית", "url": "https://www.youtube.com/embed/KLneIoAAwKQ", "type": "video", "originalUrl": "https://youtu.be/KLneIoAAwKQ" },
+            { "id": 1000031, "title": "איזון", "artist": "חנן בן ארי", "category": "משמעות", "url": "https://www.youtube.com/embed/8UM6Pc0LkDw", "type": "video", "originalUrl": "https://youtu.be/8UM6Pc0LkDw" },
+            { "id": 1000032, "title": "איך זה שכוכב", "artist": "מתי כספי", "category": "משמעות", "url": "https://www.youtube.com/embed/1GI5Vst5a-o", "type": "video", "originalUrl": "https://youtu.be/1GI5Vst5a-o" },
+            { "id": 1000033, "title": "דרך ארוכה", "artist": "אניה בוקשטיין", "category": "משמעות", "url": "https://www.youtube.com/embed/EcpSKBA45n0", "type": "video", "originalUrl": "https://youtu.be/EcpSKBA45n0" },
+            { "id": 1000034, "title": "שיר לשירה", "artist": "מירי מסיקה", "category": "הקשבה", "url": "https://www.youtube.com/embed/6AyQW2KxG8k", "type": "video", "originalUrl": "https://youtu.be/6AyQW2KxG8k" },
+            { "id": 1000035, "title": "כשתבוא אהבה", "artist": "יהודית רביץ", "category": "הקשבה", "url": "https://www.youtube.com/embed/-b-e0aU8O8s", "type": "video", "originalUrl": "https://youtu.be/-b-e0aU8O8s" },
+            { "id": 1000036, "title": "לבחור נכון", "artist": "אמיר דדון", "category": "חשיבה מתפתחת Growth Mindset", "url": "https://www.youtube.com/embed/yjJcnqZqciU", "type": "video", "originalUrl": "https://youtu.be/yjJcnqZqciU" },
+            { "id": 1000037, "title": "חוזרים הביתה", "artist": "שלמה ארצי ואריק איינשטיין", "category": "קבלה עצמית", "url": "https://www.youtube.com/embed/DFA5gIeWXxQ", "type": "video", "originalUrl": "https://youtu.be/DFA5gIeWXxQ" },
+            { "id": 1000038, "title": "לבנות ולהרוס", "artist": "דנה ברגר", "category": "קבלה עצמית", "url": "https://www.youtube.com/embed/ui83lPlUq_s", "type": "video", "originalUrl": "https://youtu.be/ui83lPlUq_s" },
+            { "id": 1000039, "title": "אתה פלא", "artist": "אסתר רדא", "category": "אותנטיות", "url": "https://www.youtube.com/embed/XtzkwRYupYU", "type": "video", "originalUrl": "https://youtu.be/XtzkwRYupYU" },
+            { "id": 1000040, "title": "הימים עוברים", "artist": "אברהם טל", "category": "אותנטיות", "url": "https://www.youtube.com/embed/fIwEaHjgBKQ", "type": "video", "originalUrl": "https://youtu.be/fIwEaHjgBKQ" },
+            { "id": 1000041, "title": "חלק מהזמן", "artist": "עידן עמדי", "category": "אותנטיות", "url": "https://www.youtube.com/embed/iUMQ1NjHsqY", "type": "video", "originalUrl": "https://youtu.be/iUMQ1NjHsqY" },
+            { "id": 1000042, "title": "מקום בלב", "artist": "ארכדי דוכין, שלומי שבת, בועז שרעבי, לאה שבת", "category": "יוזמת / סיכום", "url": "https://www.youtube.com/embed/1X7P-BPw4Yo", "type": "video", "originalUrl": "https://youtu.be/1X7P-BPw4Yo" },
+            { "id": 1000043, "title": "מה שיהיה יהיה", "artist": "התקווה 6", "category": "יוזמת / סיכום", "url": "https://www.youtube.com/embed/Pig_CnUyVtc", "type": "video", "originalUrl": "https://youtu.be/Pig_CnUyVtc" },
+            { "id": 1000044, "title": "סיפור אחר", "artist": "נתן גושן", "category": "יוזמת / סיכום", "url": "https://www.youtube.com/embed/XTH9Tz_LC1s", "type": "video", "originalUrl": "https://youtu.be/XTH9Tz_LC1s" },
+            { "id": 1000045, "title": "ילדים", "artist": "אביתר בנאי", "category": "התקשרות", "url": "https://www.youtube.com/embed/WaUlZbw0_Fw", "type": "video", "originalUrl": "https://youtu.be/WaUlZbw0_Fw" },
+            { "id": 1000046, "title": "קחי לך", "artist": "ריטה ומשי קליינשטיין", "category": "להקת הזאבות", "url": "https://www.youtube.com/embed/l2Er9cNckXc", "type": "video", "originalUrl": "https://youtu.be/l2Er9cNckXc" },
+            { "id": 1000047, "title": "אחות", "artist": "משי קליינשטיין ומגי אזרזר", "category": "הרשות להיות אנושי", "url": "https://www.youtube.com/embed/5g2TFcYgJgA", "type": "video", "originalUrl": "https://youtu.be/5g2TFcYgJgA" },
+            { "id": 1000048, "title": "חוף מבטחים", "artist": "יוגב גלוזמן ונינט טייב", "category": "התקשרות", "url": "https://www.youtube.com/embed/kjETNdJmQz8", "type": "video", "originalUrl": "https://youtu.be/kjETNdJmQz8" },
+            { "id": 1000049, "title": "לא נשבר", "artist": "עידן עמדי", "category": "רגשות חיובייים", "url": "https://www.youtube.com/embed/tDNZRRxeaSs", "type": "video", "originalUrl": "https://youtu.be/tDNZRRxeaSs" }
+          ];
+
           useEffect(() => {
             loadSongs();
             loadCategories();
@@ -49,10 +127,23 @@
             try {
               const stored = localStorage.getItem('songs-library');
               if (stored) {
-                setSongs(JSON.parse(stored));
+                const storedSongs = JSON.parse(stored);
+                // Merge default songs with stored songs, avoiding duplicates
+                const allSongs = [...defaultSongs];
+                storedSongs.forEach(storedSong => {
+                  if (!allSongs.find(s => s.id === storedSong.id)) {
+                    allSongs.push(storedSong);
+                  }
+                });
+                setSongs(allSongs);
+              } else {
+                // First time - use default songs
+                setSongs(defaultSongs);
+                localStorage.setItem('songs-library', JSON.stringify(defaultSongs));
               }
             } catch (error) {
-              console.log('No existing songs found');
+              console.log('Loading default songs');
+              setSongs(defaultSongs);
             }
             setIsLoading(false);
           };
@@ -61,10 +152,23 @@
             try {
               const stored = localStorage.getItem('song-categories');
               if (stored) {
-                setCustomCategories(JSON.parse(stored));
+                const storedCategories = JSON.parse(stored);
+                // Merge default categories with stored categories, avoiding duplicates
+                const allCategories = [...defaultCategories];
+                storedCategories.forEach(cat => {
+                  if (!allCategories.includes(cat)) {
+                    allCategories.push(cat);
+                  }
+                });
+                setCustomCategories(allCategories);
+              } else {
+                // First time - use default categories
+                setCustomCategories(defaultCategories);
+                localStorage.setItem('song-categories', JSON.stringify(defaultCategories));
               }
             } catch (error) {
-              console.log('No existing categories found');
+              console.log('Loading default categories');
+              setCustomCategories(defaultCategories);
             }
           };
 
