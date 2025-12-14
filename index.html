@@ -8,14 +8,15 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .icon { display: inline-block; }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
-        const { Music, Search, Play, Pause, ExternalLink, Plus, Trash2, Edit2, Save, X } = lucide;
 
         const SongLibraryApp = () => {
           const [songs, setSongs] = useState([]);
@@ -38,13 +39,12 @@
           const [newCategory, setNewCategory] = useState('');
           const [isConverting, setIsConverting] = useState(false);
 
-          // Load songs from storage
           useEffect(() => {
             loadSongs();
             loadCategories();
           }, []);
 
-          const loadSongs = async () => {
+          const loadSongs = () => {
             setIsLoading(true);
             try {
               const stored = localStorage.getItem('songs-library');
@@ -52,66 +52,64 @@
                 setSongs(JSON.parse(stored));
               }
             } catch (error) {
-              console.log('No existing songs found, starting fresh');
+              console.log('No existing songs found');
             }
             setIsLoading(false);
           };
 
-          const loadCategories = async () => {
+          const loadCategories = () => {
             try {
               const stored = localStorage.getItem('song-categories');
               if (stored) {
                 setCustomCategories(JSON.parse(stored));
               }
             } catch (error) {
-              console.log('No existing categories found, starting fresh');
+              console.log('No existing categories found');
             }
           };
 
-          const saveSongs = async (updatedSongs) => {
+          const saveSongs = (updatedSongs) => {
             try {
               localStorage.setItem('songs-library', JSON.stringify(updatedSongs));
             } catch (error) {
-              console.error('Error saving songs:', error);
               alert('שגיאה בשמירת השירים');
             }
           };
 
-          const saveCategories = async (updatedCategories) => {
+          const saveCategories = (updatedCategories) => {
             try {
               localStorage.setItem('song-categories', JSON.stringify(updatedCategories));
             } catch (error) {
-              console.error('Error saving categories:', error);
               alert('שגיאה בשמירת הקטגוריות');
             }
           };
 
-          const addCategory = async () => {
+          const addCategory = () => {
             if (!newCategory.trim()) {
-              alert('נא להזין שם קטגוריה');
+              alert('נא להזין שם נושא');
               return;
             }
             if (customCategories.includes(newCategory.trim())) {
-              alert('קטגוריה זו כבר קיימת');
+              alert('נושא זה כבר קיים');
               return;
             }
             const updatedCategories = [...customCategories, newCategory.trim()];
             setCustomCategories(updatedCategories);
-            await saveCategories(updatedCategories);
+            saveCategories(updatedCategories);
             setNewCategory('');
           };
 
-          const deleteCategory = async (categoryToDelete) => {
-            if (confirm(`האם אתה בטוח שברצונך למחוק את הקטגוריה "${categoryToDelete}"?`)) {
+          const deleteCategory = (categoryToDelete) => {
+            if (confirm(`האם אתה בטוח שברצונך למחוק את הנושא "${categoryToDelete}"?`)) {
               const updatedCategories = customCategories.filter(cat => cat !== categoryToDelete);
               setCustomCategories(updatedCategories);
-              await saveCategories(updatedCategories);
+              saveCategories(updatedCategories);
               
               const updatedSongs = songs.map(song => 
                 song.category === categoryToDelete ? { ...song, category: '' } : song
               );
               setSongs(updatedSongs);
-              await saveSongs(updatedSongs);
+              saveSongs(updatedSongs);
               
               if (selectedCategory === categoryToDelete) {
                 setSelectedCategory('הכל');
@@ -121,7 +119,7 @@
 
           const categories = ['הכל', ...customCategories];
 
-          const addSong = async () => {
+          const addSong = () => {
             if (!newSong.title || !newSong.artist || !newSong.category || !newSong.url) {
               alert('נא למלא את כל השדות');
               return;
@@ -165,18 +163,18 @@
 
             const updatedSongs = [...songs, song];
             setSongs(updatedSongs);
-            await saveSongs(updatedSongs);
+            saveSongs(updatedSongs);
             
             setNewSong({ title: '', artist: '', category: '', url: '', type: 'link' });
             setIsAddingNew(false);
             setIsConverting(false);
           };
 
-          const deleteSong = async (id) => {
+          const deleteSong = (id) => {
             if (confirm('האם אתה בטוח שברצונך למחוק את השיר?')) {
               const updatedSongs = songs.filter(song => song.id !== id);
               setSongs(updatedSongs);
-              await saveSongs(updatedSongs);
+              saveSongs(updatedSongs);
               if (currentlyPlaying?.id === id) {
                 setCurrentlyPlaying(null);
               }
@@ -194,7 +192,7 @@
             });
           };
 
-          const saveEdit = async () => {
+          const saveEdit = () => {
             setIsConverting(true);
             
             let finalUrl = newSong.url;
@@ -234,7 +232,7 @@
                 : song
             );
             setSongs(updatedSongs);
-            await saveSongs(updatedSongs);
+            saveSongs(updatedSongs);
             setEditingId(null);
             setNewSong({ title: '', artist: '', category: '', url: '', type: 'link' });
             setIsConverting(false);
@@ -270,7 +268,7 @@
           }
 
           return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6" dir="rtl">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
               <div className="max-w-6xl mx-auto">
                 {/* Video Banner */}
                 <div className="bg-white rounded-2xl p-4 mb-6 shadow-lg border-2 border-blue-200 overflow-hidden">
@@ -302,7 +300,7 @@
                       onClick={() => setIsAddingNew(!isAddingNew)}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all transform hover:scale-105 shadow-md"
                     >
-                      <lucide.Plus className="w-5 h-5" />
+                      <span className="text-xl">+</span>
                       הוסף שיר
                     </button>
                   </div>
@@ -310,7 +308,7 @@
                   {/* Search and Filter */}
                   <div className="flex gap-4 flex-wrap">
                     <div className="flex-1 min-w-[250px] relative">
-                      <lucide.Search className="absolute right-3 top-3 w-5 h-5 text-blue-400" />
+                      <span className="absolute right-3 top-3 text-blue-400">🔍</span>
                       <input
                         type="text"
                         placeholder="חפש שיר או אמן..."
@@ -324,9 +322,9 @@
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       className="px-6 py-3 rounded-lg bg-blue-50 text-blue-900 border-2 border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="הכל" className="bg-white">חפש לפי נושא מפגש</option>
+                      <option value="הכל">חפש לפי נושא מפגש</option>
                       {customCategories.map(cat => (
-                        <option key={cat} value={cat} className="bg-white">{cat}</option>
+                        <option key={cat} value={cat}>{cat}</option>
                       ))}
                     </select>
                   </div>
@@ -348,7 +346,7 @@
                       onClick={addCategory}
                       className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-md"
                     >
-                      <lucide.Plus className="w-5 h-5" />
+                      <span className="text-xl">+</span>
                       הוסף
                     </button>
                   </div>
@@ -362,9 +360,9 @@
                           <span className="font-medium">{cat}</span>
                           <button
                             onClick={() => deleteCategory(cat)}
-                            className="hover:bg-red-100 rounded-full p-1 transition-all"
+                            className="hover:bg-red-100 rounded-full p-1 transition-all text-red-600"
                           >
-                            <lucide.X className="w-4 h-4 text-red-600" />
+                            ✕
                           </button>
                         </div>
                       ))}
@@ -400,9 +398,9 @@
                         onChange={(e) => setNewSong({...newSong, category: e.target.value})}
                         className="px-4 py-3 rounded-lg bg-blue-50 text-blue-900 border-2 border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 md:col-span-2"
                       >
-                        <option value="" className="bg-white">בחר נושא מפגש</option>
+                        <option value="">בחר נושא מפגש</option>
                         {customCategories.map(cat => (
-                          <option key={cat} value={cat} className="bg-white">{cat}</option>
+                          <option key={cat} value={cat}>{cat}</option>
                         ))}
                       </select>
                       <input
@@ -419,7 +417,7 @@
                         disabled={isConverting}
                         className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <lucide.Save className="w-5 h-5" />
+                        <span>💾</span>
                         {isConverting ? 'מעבד...' : editingId ? 'שמור שינויים' : 'הוסף'}
                       </button>
                       <button
@@ -433,7 +431,7 @@
                         }}
                         className="bg-gray-400 hover:bg-gray-500 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-md"
                       >
-                        <lucide.X className="w-5 h-5" />
+                        <span>✕</span>
                         ביטול
                       </button>
                     </div>
@@ -443,7 +441,7 @@
                 {/* Songs Grid */}
                 {filteredSongs.length === 0 ? (
                   <div className="bg-white rounded-2xl p-12 text-center shadow-lg border-2 border-blue-200">
-                    <lucide.Music className="w-16 h-16 text-blue-300 mx-auto mb-4" />
+                    <div className="text-6xl mb-4">🎵</div>
                     <p className="text-blue-900 text-xl font-medium">
                       {songs.length === 0 ? 'אין שירים עדיין. הוסף את השיר הראשון!' : 'לא נמצאו שירים התואמים את החיפוש'}
                     </p>
@@ -453,7 +451,7 @@
                     {filteredSongs.map(song => (
                       <div
                         key={song.id}
-                        className="bg-white rounded-xl p-5 shadow-lg border-2 border-blue-100 hover:border-blue-300 hover:shadow-xl transition-all transform hover:scale-105"
+                        className="bg-white rounded-xl p-5 shadow-lg border-2 border-blue-100 hover:border-blue-300 hover:shadow-xl transition-all"
                       >
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex-1">
@@ -466,36 +464,19 @@
                         </div>
 
                         <div className="flex gap-2 mt-4">
-                          {song.type === 'video' ? (
+                          {song.type === 'video' || song.type === 'spotify' ? (
                             <button
                               onClick={() => handlePlayPause(song)}
-                              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md"
+                              className={`flex-1 ${song.type === 'spotify' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md`}
                             >
                               {currentlyPlaying?.id === song.id ? (
                                 <>
-                                  <lucide.Pause className="w-4 h-4" />
+                                  <span>⏸</span>
                                   סגור
                                 </>
                               ) : (
                                 <>
-                                  <lucide.Play className="w-4 h-4" />
-                                  נגן
-                                </>
-                              )}
-                            </button>
-                          ) : song.type === 'spotify' ? (
-                            <button
-                              onClick={() => handlePlayPause(song)}
-                              className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md"
-                            >
-                              {currentlyPlaying?.id === song.id ? (
-                                <>
-                                  <lucide.Pause className="w-4 h-4" />
-                                  סגור
-                                </>
-                              ) : (
-                                <>
-                                  <lucide.Play className="w-4 h-4" />
+                                  <span>▶</span>
                                   נגן
                                 </>
                               )}
@@ -507,12 +488,12 @@
                             >
                               {currentlyPlaying?.id === song.id ? (
                                 <>
-                                  <lucide.Pause className="w-4 h-4" />
+                                  <span>⏸</span>
                                   עצור
                                 </>
                               ) : (
                                 <>
-                                  <lucide.Play className="w-4 h-4" />
+                                  <span>▶</span>
                                   נגן
                                 </>
                               )}
@@ -524,21 +505,21 @@
                               rel="noopener noreferrer"
                               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md"
                             >
-                              <lucide.ExternalLink className="w-4 h-4" />
+                              <span>🔗</span>
                               פתח
                             </a>
                           )}
                           <button
                             onClick={() => startEdit(song)}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-lg transition-all shadow-md"
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg transition-all shadow-md"
                           >
-                            <lucide.Edit2 className="w-4 h-4" />
+                            ✏️
                           </button>
                           <button
                             onClick={() => deleteSong(song.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all shadow-md"
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all shadow-md"
                           >
-                            <lucide.Trash2 className="w-4 h-4" />
+                            🗑️
                           </button>
                         </div>
 
@@ -591,7 +572,7 @@
                 <div className="mt-6 bg-white rounded-2xl p-4 shadow-lg border-2 border-blue-200">
                   <p className="text-blue-900 text-center font-medium">
                     סה"כ {filteredSongs.length} {filteredSongs.length === 1 ? 'שיר' : 'שירים'}
-                    {selectedCategory !== 'הכל' && ` בקטגוריה "${selectedCategory}"`}
+                    {selectedCategory !== 'הכל' && ` בנושא "${selectedCategory}"`}
                   </p>
                 </div>
               </div>
@@ -599,7 +580,6 @@
           );
         };
 
-        lucide.createIcons();
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<SongLibraryApp />);
     </script>
